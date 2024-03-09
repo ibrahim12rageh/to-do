@@ -38,7 +38,10 @@ dependencies:
   #calendar_timeline: ^1.1.2
   flutter_slidable: ^3.0.1
   easy_date_timeline: ^1.0.0
-
+  firebase_core: ^2.24.2
+  cloud_firestore: ^4.14.0
+  firebase_auth: ^4.16.0
+#  fluttertoast: ^8.2.0
 
 
 dev_dependencies:
@@ -48,7 +51,6 @@ dev_dependencies:
     sdk: flutter
   intl: any
   provider: ^6.1.1
-
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -69,8 +71,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - assets/images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

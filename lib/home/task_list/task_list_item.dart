@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:to_do/firebase_utils.dart';
+import 'package:to_do/model/task.dart';
 import 'package:to_do/my_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/provider/app_config_provider.dart';
@@ -8,9 +10,12 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 class TaskListItem extends StatefulWidget {
   @override
   State<TaskListItem> createState() => _TaskListItemState();
+  Task task ;
+  TaskListItem({required this.task});
 }
 
 class _TaskListItemState extends State<TaskListItem> {
+
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<AppConfigProvider>(context);
@@ -29,6 +34,11 @@ class _TaskListItemState extends State<TaskListItem> {
       SlidableAction(
         borderRadius: BorderRadius.circular(12),
       onPressed: (context){
+          FirebaseUtils.deleteTaskFromFireStore(widget.task).
+          timeout(Duration(milliseconds: 500),onTimeout: (){
+            print('task deleted successfully');
+            provider.getAllTasksFromFireStore();
+          });
       },
       backgroundColor: MyTheme.redColor,
       foregroundColor: MyTheme.whiteColor,
@@ -58,11 +68,12 @@ class _TaskListItemState extends State<TaskListItem> {
             Expanded(child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-              Text(AppLocalizations.of(context)!.task,
+              Text(widget.task.title ?? '',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 color: colors
               ),),
-              Text(AppLocalizations.of(context)!.description,style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              Text(widget.task.description ?? ''
+                  ,style: Theme.of(context).textTheme.titleSmall?.copyWith(
                   color: provider.isDarkMode()?
                   MyTheme.whiteColor
                       :

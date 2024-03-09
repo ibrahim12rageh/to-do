@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+// import 'package:fluttertoast/fluttertoast.dart';
+import 'package:to_do/firebase_utils.dart';
+import 'package:to_do/model/task.dart';
 import 'package:to_do/my_theme.dart';
 import 'package:provider/provider.dart';
 import 'package:to_do/provider/app_config_provider.dart';
@@ -13,9 +16,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
   var formKey =GlobalKey<FormState>();
   String title = '' ;
   String description = '' ;
+  late AppConfigProvider provider;
   @override
   Widget build(BuildContext context) {
-    var provider = Provider.of<AppConfigProvider>(context);
+     provider = Provider.of<AppConfigProvider>(context);
     return Container(
       color: provider.isDarkMode()?
           MyTheme.blackColor
@@ -123,7 +127,10 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
                     ),)),
               SizedBox(height: 15,),
               ElevatedButton(onPressed: (){
-                addTask();
+                setState(() {
+                  addTask();
+
+                });
               }, child: Text(AppLocalizations.of(context)!.add,
               style: Theme.of(context).textTheme.titleLarge,
               ))
@@ -150,7 +157,26 @@ class _AddTaskBottomSheetState extends State<AddTaskBottomSheet> {
 
   void addTask() {
     if(formKey.currentState?.validate()==true){
-
+      Task task = Task(title: title, description: description, dateTime: selectedDate);
+      FirebaseUtils.addTaskToFireStore(task).timeout(         //الaddtask مش هترجع القيمه فى لحظتها عشان كده هى بترجع future void عندنا طريقتين لحل المشكله دى اما انى اعمل await وsyncالطريقه التانيه انى اعمل then فى حالة انى شغال اون لاين او استخدم timeout فى خالة انى شغال اوف لاين
+        Duration(milliseconds: 500), //يعنى بعد نص ثانيه
+        onTimeout: (){
+          print('the task added');
+          // print('task is done');
+          // Fluttertoast.showToast(
+          //   msg: "This is Center Short Toast",
+          //   toastLength: Toast.LENGTH_LONG,
+          //   gravity: ToastGravity.BOTTOM,
+          //   timeInSecForIosWeb: 1,
+          //   backgroundColor: Colors.red,
+          //   textColor: Colors.black,
+          //   fontSize: 24.0,
+          // );
+          //
+          provider.getAllTasksFromFireStore();
+          Navigator.pop(context);
+        }
+      );
     }
   }
 }

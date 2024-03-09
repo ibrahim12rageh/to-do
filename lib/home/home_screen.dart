@@ -54,5 +54,4 @@ class _HomeScreenState extends State<HomeScreen> {
         builder: (context) => AddTaskBottomSheet()
     );
   }
-  // List<Widget> tabs =[TaskListTab(),SettingsTab()];
 }

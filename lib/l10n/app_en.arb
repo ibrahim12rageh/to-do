@@ -17,5 +17,9 @@
 "dark" : "dark",
 "task" : "Task",
 "description" : "Description",
-"done" : "Done!"
+"done" : "Done!",
+"user_name" : "User Name",
+"email" : "Email",
+"password" : "Password",
+"confirm_password" : "Confirm Password"
 }
